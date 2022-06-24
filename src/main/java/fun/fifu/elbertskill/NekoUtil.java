@@ -67,7 +67,7 @@ public class NekoUtil {
      *
      * @param itemStack 待标记的物品
      */
-    public static void makePlunderItem(ItemStack itemStack, String tag) {
+    public static void makeTagItem(ItemStack itemStack, String tag) {
         if (hasTagItem(itemStack, tag))
             return;
         ItemMeta itemMeta = itemStack.getItemMeta();
@@ -127,7 +127,7 @@ public class NekoUtil {
 
     @Data
     @Accessors(fluent = true, chain = true)
-    private static class Res {
+    public static class Res {
         private Player player;
         private String[] args;
     }
