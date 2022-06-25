@@ -10,6 +10,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.util.Vector;
 
 import com.alkaidmc.alkaid.bukkit.event.AlkaidEvent;
 
@@ -39,9 +40,13 @@ public class 替身 implements Initializable {
                         return;
                     if (NekoUtil.hasTagItem(itemInMainHand, "召唤替身（猪人）")) {
                         var location = player.getLocation();
+                        var vector = location.getDirection().multiply(-1);
+                        vector.setY(1);
+                        location.add(vector);
                         if (spawnMap.get(player) == null) {
-                            spawnMap.put(player, location.getWorld().spawn(location, PigZombie.class));
-                            
+                            var PigZombie = location.getWorld().spawn(location, PigZombie.class);
+                            PigZombie.setAI(false);
+                            spawnMap.put(player, PigZombie);
                             player.sendMessage("已召唤替身");
                         } else {
                             spawnMap.get(player).remove();
