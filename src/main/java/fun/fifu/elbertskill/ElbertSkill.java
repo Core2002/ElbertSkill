@@ -10,7 +10,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import fun.fifu.elbertskill.functions.替身;
+import fun.fifu.elbertskill.functions.TheWorld;
 
 public class ElbertSkill extends JavaPlugin implements Listener {
     public static final Map<Player, Player> damageMap = new HashMap<>();
@@ -35,7 +35,7 @@ public class ElbertSkill extends JavaPlugin implements Listener {
             res.player().sendMessage("已标记 " + res.args()[1] + " 标签");
         });
 
-        new 替身(this).initialize();
+        new TheWorld(this).initialize();
     }
 
     @Override
