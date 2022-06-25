@@ -30,15 +30,8 @@ public class NekoUtil {
         inventory.forEach(itemStack -> {
             if (itemStack == null || itemStack.getType().isAir())
                 return;
-            if (hasTagItem(itemStack, tag)) {
-                var num = readItemNumericProperties(itemStack, tag);
-                if (num >= 0) {
-                    has.set(true);
-                    writeItemNumericProperties(itemStack, tag, num--);
-                    System.out.println("剩余次数设置为" + num);
-                }
-            }
-
+            if (hasTagItem(itemStack, tag)) 
+                has.set(true);
         });
         return has.get();
     }
