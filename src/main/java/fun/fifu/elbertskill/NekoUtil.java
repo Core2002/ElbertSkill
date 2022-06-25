@@ -19,6 +19,21 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 public class NekoUtil {
+    /**
+     * 检查玩家背包内是否携带某种标签的物品
+     *
+     * @return true:携带 false:不携带
+     */
+    public static void spendTagItem(PlayerInventory inventory, String tag) {
+        for (ItemStack itemStack : inventory) {
+            if (itemStack == null || itemStack.getType().isAir())
+                continue;
+            if (NekoUtil.hasTagItem(itemStack, tag)) {
+                itemStack.setAmount(itemStack.getAmount() - 1);
+                return;
+            }
+        }
+    }
 
     /**
      * 检查玩家背包内是否携带某种标签的物品
@@ -30,7 +45,7 @@ public class NekoUtil {
         inventory.forEach(itemStack -> {
             if (itemStack == null || itemStack.getType().isAir())
                 return;
-            if (hasTagItem(itemStack, tag)) 
+            if (hasTagItem(itemStack, tag))
                 has.set(true);
         });
         return has.get();
