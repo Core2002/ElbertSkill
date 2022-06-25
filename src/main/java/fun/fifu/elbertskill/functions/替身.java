@@ -10,7 +10,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.util.Vector;
 
 import com.alkaidmc.alkaid.bukkit.event.AlkaidEvent;
 
@@ -22,11 +21,7 @@ public class 替身 implements Initializable {
     public 替身(Plugin plugin) {
         this.plugin = plugin;
     }
-
-    private 替身() {
-        throw new RuntimeException();
-    }
-
+    
     public Map<Player, Entity> spawnMap = new HashMap<>();
 
     @Override
