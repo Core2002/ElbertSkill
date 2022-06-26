@@ -1,8 +1,7 @@
 package fun.fifu.elbertskill.functions;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import com.alkaidmc.alkaid.bukkit.event.AlkaidEvent;
+import fun.fifu.elbertskill.NekoUtil;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.PigZombie;
@@ -11,10 +10,13 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
 
-import com.alkaidmc.alkaid.bukkit.event.AlkaidEvent;
-
-import fun.fifu.elbertskill.NekoUtil;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 // 一、世界[The World]
 // 右键物品形式的替身召唤对应替身生物，再次收回（僵尸猪灵）
@@ -42,6 +44,8 @@ public class TheWorld implements Initializable {
 
     public Map<Player, Entity> spawnMap = new HashMap<>();
 
+    List<LivingEntity> aiList = new ArrayList<>();
+
     @Override
     public void initialize() {
         // 召唤替身
@@ -55,11 +59,39 @@ public class TheWorld implements Initializable {
                     if (!NekoUtil.hasTagItem(itemInMainHand, "召唤替身（猪人）"))
                         return;
 
+                    // 处理替身
                     if (spawnMap.get(player) == null) {
                         summonStand(player, PigZombie.class);
                     } else {
                         removeStand(player);
                     }
+
+                    // 移除全体实体AI (半径100)
+                    player.getWorld().getEntities().forEach(entity -> {
+                        if (entity.equals(player))
+                            return;
+                        if (!(entity instanceof LivingEntity livingEntity))
+                            return;
+                        if (entity.getLocation().distance(player.getLocation()) > 100)
+                            return;
+                        livingEntity.setAI(false);
+
+                        livingEntity.addPotionEffect(PotionEffectType.BLINDNESS.createEffect(20 * 8, 8));
+                        livingEntity.addPotionEffect(PotionEffectType.SLOW.createEffect(20 * 8, 8));
+                        livingEntity.addPotionEffect(PotionEffectType.WEAKNESS.createEffect(20 * 8, 8));
+                        aiList.add(livingEntity);
+
+                        player.sendMessage("已删除AI");
+                    });
+
+                    // 放回AI
+                    new BukkitRunnable() {
+                        @Override
+                        public void run() {
+                            aiList.forEach(livingEntity -> livingEntity.setAI(true));
+                            player.sendMessage("已放回AI");
+                        }
+                    }.runTaskLater(plugin,180);
 
                 })
                 .priority(EventPriority.HIGHEST)
@@ -70,7 +102,7 @@ public class TheWorld implements Initializable {
 
     /**
      * 让玩家召唤一个替身
-     * 
+     *
      * @param player 要召唤替身的玩家
      * @param clazz  替身实体种类
      */
@@ -87,7 +119,7 @@ public class TheWorld implements Initializable {
 
     /**
      * 收回替身
-     * 
+     *
      * @param player 要收回替身的玩家
      */
     private void removeStand(Player player) {
