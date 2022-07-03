@@ -2,6 +2,9 @@ package fun.fifu.elbertskill.stands;
 
 import com.alkaidmc.alkaid.bukkit.event.AlkaidEvent;
 import fun.fifu.elbertskill.NekoUtil;
+import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.PigZombie;
@@ -9,6 +12,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -70,10 +74,52 @@ public class TheWorld implements Stand {
         // 处理替身
         if (spawnMap.get(player) == null) {
             summonStand(player, PigZombie.class);
+
+            // 1技能：时停
+            timeStop(player);
+
+            // 2技能：木大木大
+            mudaMuda(player);
         } else {
             removeStand(player);
         }
+    }
 
+    private String mudaTag = "木大木大";
+
+    /**
+     * 技能：木大木大
+     *
+     * @param player 召唤技能的玩家
+     */
+    private void mudaMuda(Player player) {
+        // 发放木大
+        ItemStack itemStack = new ItemStack(Material.STICK);
+        NekoUtil.makeTagItem(itemStack, mudaTag);
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        itemMeta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE,
+                new AttributeModifier("value", 18, AttributeModifier.Operation.ADD_NUMBER));
+        itemMeta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED,
+                new AttributeModifier("value", 20, AttributeModifier.Operation.ADD_NUMBER));
+        itemStack.setItemMeta(itemMeta);
+        player.getInventory().addItem(itemStack);
+
+        // 收回木大
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                NekoUtil.spendTagItem(player.getInventory(), mudaTag);
+                player.sendMessage("已收回 " + mudaTag);
+            }
+        }.runTaskLater(plugin, 20 * 20);
+    }
+
+    /**
+     * 技能：时停
+     *
+     * @param player 召唤技能的玩家
+     */
+    private void timeStop(Player player) {
         // 移除全体实体AI (半径100)
         player.getWorld().getEntities().forEach(entity -> {
             if (entity.equals(player))
@@ -99,7 +145,7 @@ public class TheWorld implements Stand {
                 aiList.forEach(livingEntity -> livingEntity.setAI(true));
                 player.sendMessage("已放回AI");
             }
-        }.runTaskLater(plugin,180);
+        }.runTaskLater(plugin, 180);
     }
 
 
