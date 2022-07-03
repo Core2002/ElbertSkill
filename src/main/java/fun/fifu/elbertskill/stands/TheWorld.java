@@ -50,7 +50,7 @@ public class TheWorld extends Stand {
             summonStand(player, PigZombie.class);
 
             // 1技能：时停
-            timeStop(player);
+            timeStop(player,180);
 
             // 2技能：木大木大
             mudaMuda(player);

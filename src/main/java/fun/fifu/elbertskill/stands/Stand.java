@@ -163,9 +163,10 @@ public abstract class Stand {
     /**
      * 技能：时停
      *
-     * @param player 召唤技能的玩家
+     * @param player    召唤技能的玩家
+     * @param tick      多少tick过后归还AI
      */
-    public void timeStop(Player player) {
+    public void timeStop(Player player,Integer tick) {
         // 移除全体实体AI (半径100)
         player.getWorld().getEntities().forEach(entity -> {
             if (entity.equals(player))
@@ -191,6 +192,6 @@ public abstract class Stand {
                 aiList.forEach(livingEntity -> livingEntity.setAI(true));
                 player.sendMessage("已放回AI");
             }
-        }.runTaskLater(plugin, 180);
+        }.runTaskLater(plugin, tick);
     }
 }
