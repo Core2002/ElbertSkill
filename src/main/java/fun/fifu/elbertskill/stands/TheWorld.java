@@ -1,4 +1,4 @@
-package fun.fifu.elbertskill.functions;
+package fun.fifu.elbertskill.stands;
 
 import com.alkaidmc.alkaid.bukkit.event.AlkaidEvent;
 import fun.fifu.elbertskill.NekoUtil;
@@ -35,7 +35,7 @@ import java.util.Map;
 // 给玩家一个拿在主手加18攻击伤害，20攻击速度的物品（最好是棍子这类不能摆放的）
 // 20秒后移除
 // 冷却5秒
-public class TheWorld implements Initializable {
+public class TheWorld implements Stand {
     Plugin plugin;
 
     public TheWorld(Plugin plugin) {
