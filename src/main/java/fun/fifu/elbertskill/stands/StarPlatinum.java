@@ -41,7 +41,7 @@ public class StarPlatinum extends Stand {
         summonStandTag = "Star Platinum";
         // 处理技能物品
         ElbertSkill.skillItemTag.add(summonStandTag);
-//        ElbertSkill.skillItemTag.add(mudaTag);
+        ElbertSkill.skillItemTag.add(oulaTag);
         super.initialize();
     }
 
@@ -63,6 +63,10 @@ public class StarPlatinum extends Stand {
 
     String oulaTag = "欧拉欧拉";
 
+    /**
+     * 技能：欧拉欧拉
+     * @param player    召唤技能的玩家
+     */
     void oulaOula(Player player) {
         // 发放欧拉
         ItemStack itemStack = new ItemStack(Material.STICK);

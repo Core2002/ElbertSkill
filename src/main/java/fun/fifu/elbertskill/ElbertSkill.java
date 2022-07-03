@@ -3,6 +3,7 @@ package fun.fifu.elbertskill;
 import java.util.*;
 
 import com.alkaidmc.alkaid.bukkit.event.AlkaidEvent;
+import fun.fifu.elbertskill.stands.StarPlatinum;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -43,6 +44,7 @@ public class ElbertSkill extends JavaPlugin implements Listener {
 
         // 初始化替身
         new TheWorld(this).initialize();
+        new StarPlatinum(this).initialize();
     }
 
     public static Set<String> skillItemTag = new HashSet<>();
