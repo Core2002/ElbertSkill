@@ -52,53 +52,56 @@ public class TheWorld implements Stand {
         new AlkaidEvent(plugin).simple()
                 .event(PlayerInteractEvent.class)
                 .listener(event -> {
-                    var player = event.getPlayer();
+                    Player player = event.getPlayer();
                     ItemStack itemInMainHand = player.getInventory().getItemInMainHand();
                     if (itemInMainHand.getType().isAir())
                         return;
                     if (!NekoUtil.hasTagItem(itemInMainHand, "召唤替身（猪人）"))
                         return;
-
-                    // 处理替身
-                    if (spawnMap.get(player) == null) {
-                        summonStand(player, PigZombie.class);
-                    } else {
-                        removeStand(player);
-                    }
-
-                    // 移除全体实体AI (半径100)
-                    player.getWorld().getEntities().forEach(entity -> {
-                        if (entity.equals(player))
-                            return;
-                        if (!(entity instanceof LivingEntity livingEntity))
-                            return;
-                        if (entity.getLocation().distance(player.getLocation()) > 100)
-                            return;
-                        livingEntity.setAI(false);
-
-                        livingEntity.addPotionEffect(PotionEffectType.BLINDNESS.createEffect(20 * 8, 8));
-                        livingEntity.addPotionEffect(PotionEffectType.SLOW.createEffect(20 * 8, 8));
-                        livingEntity.addPotionEffect(PotionEffectType.WEAKNESS.createEffect(20 * 8, 8));
-                        aiList.add(livingEntity);
-
-                        player.sendMessage("已删除AI");
-                    });
-
-                    // 放回AI
-                    new BukkitRunnable() {
-                        @Override
-                        public void run() {
-                            aiList.forEach(livingEntity -> livingEntity.setAI(true));
-                            player.sendMessage("已放回AI");
-                        }
-                    }.runTaskLater(plugin,180);
-
+                    summon(event.getPlayer());
                 })
                 .priority(EventPriority.HIGHEST)
                 .ignore(false)
                 .register();
-
     }
+
+    @Override
+    public void summon(Player player) {
+        // 处理替身
+        if (spawnMap.get(player) == null) {
+            summonStand(player, PigZombie.class);
+        } else {
+            removeStand(player);
+        }
+
+        // 移除全体实体AI (半径100)
+        player.getWorld().getEntities().forEach(entity -> {
+            if (entity.equals(player))
+                return;
+            if (!(entity instanceof LivingEntity livingEntity))
+                return;
+            if (entity.getLocation().distance(player.getLocation()) > 100)
+                return;
+            livingEntity.setAI(false);
+
+            livingEntity.addPotionEffect(PotionEffectType.BLINDNESS.createEffect(20 * 8, 8));
+            livingEntity.addPotionEffect(PotionEffectType.SLOW.createEffect(20 * 8, 8));
+            livingEntity.addPotionEffect(PotionEffectType.WEAKNESS.createEffect(20 * 8, 8));
+            aiList.add(livingEntity);
+
+            player.sendMessage("已删除AI");
+        });
+
+        // 放回AI
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                aiList.forEach(livingEntity -> livingEntity.setAI(true));
+                player.sendMessage("已放回AI");
+            }
+        }.runTaskLater(plugin,180);
+    }
+
 
     /**
      * 让玩家召唤一个替身
