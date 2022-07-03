@@ -1,6 +1,7 @@
 package fun.fifu.elbertskill.stands;
 
 import com.alkaidmc.alkaid.bukkit.event.AlkaidEvent;
+import fun.fifu.elbertskill.ElbertSkill;
 import fun.fifu.elbertskill.NekoUtil;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
@@ -10,6 +11,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.PigZombie;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -46,9 +48,13 @@ public class TheWorld implements Stand {
         this.plugin = plugin;
     }
 
+    // 玩家 -> 玩家的替身
     public Map<Player, Entity> spawnMap = new HashMap<>();
 
+    // 删除AI的实体
     List<LivingEntity> aiList = new ArrayList<>();
+
+    private final String summonStandTag = "召唤替身（猪人）";
 
     @Override
     public void initialize() {
@@ -56,17 +62,22 @@ public class TheWorld implements Stand {
         new AlkaidEvent(plugin).simple()
                 .event(PlayerInteractEvent.class)
                 .listener(event -> {
+                    if (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK)
+                        return;
                     Player player = event.getPlayer();
                     ItemStack itemInMainHand = player.getInventory().getItemInMainHand();
                     if (itemInMainHand.getType().isAir())
                         return;
-                    if (!NekoUtil.hasTagItem(itemInMainHand, "召唤替身（猪人）"))
+                    if (!NekoUtil.hasTagItem(itemInMainHand, summonStandTag))
                         return;
                     summon(event.getPlayer());
                 })
                 .priority(EventPriority.HIGHEST)
                 .ignore(false)
                 .register();
+        // 处理技能物品
+        ElbertSkill.skillItemTag.add(summonStandTag);
+        ElbertSkill.skillItemTag.add(mudaTag);
     }
 
     @Override
@@ -85,7 +96,7 @@ public class TheWorld implements Stand {
         }
     }
 
-    private String mudaTag = "木大木大";
+    private final String mudaTag = "木大木大";
 
     /**
      * 技能：木大木大

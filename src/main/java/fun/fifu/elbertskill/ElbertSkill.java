@@ -1,12 +1,15 @@
 package fun.fifu.elbertskill;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
+import com.alkaidmc.alkaid.bukkit.event.AlkaidEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -35,7 +38,30 @@ public class ElbertSkill extends JavaPlugin implements Listener {
             res.player().sendMessage("已标记 " + res.args()[1] + " 标签");
         });
 
+        // 漏洞处理
+        antiBug();
+
+        // 初始化替身
         new TheWorld(this).initialize();
+    }
+
+    public static Set<String> skillItemTag = new HashSet<>();
+
+    private void antiBug() {
+        // 丢弃技能物品
+        new AlkaidEvent(this).simple()
+                .event(PlayerDropItemEvent.class)
+                .listener(event -> {
+                    for (String tag : skillItemTag) {
+                        if (NekoUtil.hasTagItem(event.getItemDrop().getItemStack(), tag)) {
+                            event.setCancelled(true);
+                            return;
+                        }
+                    }
+                })
+                .priority(EventPriority.HIGHEST)
+                .ignore(false)
+                .register();
     }
 
     @Override
