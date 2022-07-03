@@ -12,6 +12,9 @@ import org.bukkit.entity.PigZombie;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -49,7 +52,7 @@ public class TheWorld implements Stand {
     }
 
     // 玩家 -> 玩家的替身
-    public Map<Player, Entity> spawnMap = new HashMap<>();
+    public Map<Player, LivingEntity> spawnMap = new HashMap<>();
 
     // 删除AI的实体
     List<LivingEntity> aiList = new ArrayList<>();
@@ -75,6 +78,53 @@ public class TheWorld implements Stand {
                 .priority(EventPriority.HIGHEST)
                 .ignore(false)
                 .register();
+
+        // 替身血量和召唤者对等
+        new AlkaidEvent(plugin).simple()
+                .event(EntityDamageEvent.class)
+                .listener(event -> {
+                    LivingEntity entity = (LivingEntity) event.getEntity();
+                    if (spawnMap.containsKey(entity)) {             // 召唤者受伤
+                        LivingEntity stand = spawnMap.get(entity);
+                        stand.setMaxHealth(entity.getMaxHealth());
+                        stand.setHealth(entity.getHealth() - event.getFinalDamage());
+                    } else if (spawnMap.containsValue(entity)) {    //  替身受伤
+                        LivingEntity player = getPlayerFromStand(entity);
+                        player.setMaxHealth(entity.getMaxHealth());
+                        player.setHealth(entity.getHealth() - event.getFinalDamage());
+                    }
+                })
+                .priority(EventPriority.HIGHEST)
+                .ignore(false)
+                .register();
+
+        // 玩家死亡
+        new AlkaidEvent(plugin).simple()
+                .event(PlayerDeathEvent.class)
+                .listener(event -> {
+                    Player player = event.getEntity();
+                    if (spawnMap.containsKey(player)) {             // 召唤者死亡
+                        LivingEntity stand = spawnMap.get(player);
+                        stand.damage(999999999);
+                    }
+                })
+                .priority(EventPriority.HIGHEST)
+                .ignore(false)
+                .register();
+
+        // 替身死亡
+        new AlkaidEvent(plugin).simple()
+                .event(EntityDeathEvent.class)
+                .listener(event -> {
+                    LivingEntity stand = event.getEntity();
+                    if (spawnMap.containsValue(stand)) {             // 召唤者死亡
+                        getPlayerFromStand(stand).damage(999999999);
+                    }
+                })
+                .priority(EventPriority.HIGHEST)
+                .ignore(false)
+                .register();
+
         // 处理技能物品
         ElbertSkill.skillItemTag.add(summonStandTag);
         ElbertSkill.skillItemTag.add(mudaTag);
@@ -186,6 +236,20 @@ public class TheWorld implements Stand {
         spawnMap.get(player).remove();
         spawnMap.remove(player);
         player.sendMessage("已收回替身");
+    }
+
+    /**
+     * 用替身查找召唤者
+     *
+     * @param stand 替身
+     * @return 替身的召唤者
+     */
+    private Player getPlayerFromStand(LivingEntity stand) {
+        for (Player player : spawnMap.keySet()) {
+            if (spawnMap.get(player).equals(stand))
+                return player;
+        }
+        return null;
     }
 
 }
