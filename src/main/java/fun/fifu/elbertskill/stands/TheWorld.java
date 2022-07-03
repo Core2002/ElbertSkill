@@ -1,28 +1,16 @@
 package fun.fifu.elbertskill.stands;
 
-import com.alkaidmc.alkaid.bukkit.event.AlkaidEvent;
 import fun.fifu.elbertskill.ElbertSkill;
 import fun.fifu.elbertskill.NekoUtil;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.PigZombie;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
-
-import java.util.ArrayList;
-import java.util.List;
 
 //    一、世界[The World]
 //    右键物品形式的替身召唤对应替身生物，再次收回（僵尸猪灵）
@@ -42,81 +30,17 @@ import java.util.List;
 //    20秒后移除
 //    冷却5秒
 public class TheWorld extends Stand {
-    private final String summonStandTag = "The World";
-
     public TheWorld(Plugin plugin) {
         super(plugin);
     }
 
     @Override
     public void initialize() {
-        // 召唤替身
-        new AlkaidEvent(plugin).simple()
-                .event(PlayerInteractEvent.class)
-                .listener(event -> {
-                    if (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK)
-                        return;
-                    Player player = event.getPlayer();
-                    ItemStack itemInMainHand = player.getInventory().getItemInMainHand();
-                    if (itemInMainHand.getType().isAir())
-                        return;
-                    if (!NekoUtil.hasTagItem(itemInMainHand, summonStandTag))
-                        return;
-                    summon(event.getPlayer());
-                })
-                .priority(EventPriority.HIGHEST)
-                .ignore(false)
-                .register();
-
-        // 替身血量和召唤者对等
-        new AlkaidEvent(plugin).simple()
-                .event(EntityDamageEvent.class)
-                .listener(event -> {
-                    LivingEntity entity = (LivingEntity) event.getEntity();
-                    if (spawnMap.containsKey(entity)) {             // 召唤者受伤
-                        LivingEntity stand = spawnMap.get(entity);
-                        stand.setMaxHealth(entity.getMaxHealth());
-                        stand.setHealth(entity.getHealth() - event.getFinalDamage());
-                    } else if (spawnMap.containsValue(entity)) {    //  替身受伤
-                        LivingEntity player = getPlayerFromStand(entity);
-                        player.setMaxHealth(entity.getMaxHealth());
-                        player.setHealth(entity.getHealth() - event.getFinalDamage());
-                    }
-                })
-                .priority(EventPriority.HIGHEST)
-                .ignore(false)
-                .register();
-
-        // 玩家死亡
-        new AlkaidEvent(plugin).simple()
-                .event(PlayerDeathEvent.class)
-                .listener(event -> {
-                    Player player = event.getEntity();
-                    if (spawnMap.containsKey(player)) {             // 召唤者死亡
-                        LivingEntity stand = spawnMap.get(player);
-                        stand.damage(999999999);
-                    }
-                })
-                .priority(EventPriority.HIGHEST)
-                .ignore(false)
-                .register();
-
-        // 替身死亡
-        new AlkaidEvent(plugin).simple()
-                .event(EntityDeathEvent.class)
-                .listener(event -> {
-                    LivingEntity stand = event.getEntity();
-                    if (spawnMap.containsValue(stand)) {             // 召唤者死亡
-                        getPlayerFromStand(stand).damage(999999999);
-                    }
-                })
-                .priority(EventPriority.HIGHEST)
-                .ignore(false)
-                .register();
-
+        summonStandTag = "The World";
         // 处理技能物品
         ElbertSkill.skillItemTag.add(summonStandTag);
         ElbertSkill.skillItemTag.add(mudaTag);
+        super.initialize();
     }
 
     @Override

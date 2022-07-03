@@ -1,7 +1,16 @@
 package fun.fifu.elbertskill.stands;
 
+import com.alkaidmc.alkaid.bukkit.event.AlkaidEvent;
+import fun.fifu.elbertskill.NekoUtil;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -21,10 +30,78 @@ public abstract class Stand {
         this.plugin = plugin;
     }
 
+    public String summonStandTag;
+
     /**
      * 在此处应有初始化，插件加载时调用
      */
-    abstract void initialize();
+    public void initialize() {
+        // 召唤替身
+        new AlkaidEvent(plugin).simple()
+                .event(PlayerInteractEvent.class)
+                .listener(event -> {
+                    if (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK)
+                        return;
+                    Player player = event.getPlayer();
+                    ItemStack itemInMainHand = player.getInventory().getItemInMainHand();
+                    if (itemInMainHand.getType().isAir())
+                        return;
+                    if (!NekoUtil.hasTagItem(itemInMainHand, summonStandTag))
+                        return;
+                    summon(event.getPlayer());
+                })
+                .priority(EventPriority.HIGHEST)
+                .ignore(false)
+                .register();
+
+        // 替身血量和召唤者对等
+        new AlkaidEvent(plugin).simple()
+                .event(EntityDamageEvent.class)
+                .listener(event -> {
+                    LivingEntity entity = (LivingEntity) event.getEntity();
+                    if (spawnMap.containsKey(entity)) {             // 召唤者受伤
+                        LivingEntity stand = spawnMap.get(entity);
+                        stand.setMaxHealth(entity.getMaxHealth());
+                        stand.setHealth(entity.getHealth() - event.getFinalDamage());
+                    } else if (spawnMap.containsValue(entity)) {    //  替身受伤
+                        LivingEntity player = getPlayerFromStand(entity);
+                        player.setMaxHealth(entity.getMaxHealth());
+                        player.setHealth(entity.getHealth() - event.getFinalDamage());
+                    }
+                })
+                .priority(EventPriority.HIGHEST)
+                .ignore(false)
+                .register();
+
+        // 玩家死亡
+        new AlkaidEvent(plugin).simple()
+                .event(PlayerDeathEvent.class)
+                .listener(event -> {
+                    Player player = event.getEntity();
+                    if (spawnMap.containsKey(player)) {             // 召唤者死亡
+                        LivingEntity stand = spawnMap.get(player);
+                        stand.damage(999999999);
+                    }
+                })
+                .priority(EventPriority.HIGHEST)
+                .ignore(false)
+                .register();
+
+        // 替身死亡
+        new AlkaidEvent(plugin).simple()
+                .event(EntityDeathEvent.class)
+                .listener(event -> {
+                    LivingEntity stand = event.getEntity();
+                    if (spawnMap.containsValue(stand)) {             // 召唤者死亡
+                        getPlayerFromStand(stand).damage(999999999);
+                    }
+                })
+                .priority(EventPriority.HIGHEST)
+                .ignore(false)
+                .register();
+    }
+
+    ;
 
     /**
      * 替身被召唤时调用
