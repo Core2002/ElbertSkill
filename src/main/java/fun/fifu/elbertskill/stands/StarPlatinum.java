@@ -1,6 +1,7 @@
 package fun.fifu.elbertskill.stands;
 
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 
 //    二、白金之星[Star Platinum]（小白，记得带个钻石帽子）
 //    右键物品形式的替身召唤对应替身生物，再次收回
@@ -20,7 +21,14 @@ import org.bukkit.entity.Player;
 //    给玩家一个拿在主手加20攻击伤害，20攻击速度的物品（最好是棍子这类不能摆放的）
 //    20秒后移除
 //    冷却5秒
-public class StarPlatinum implements Stand {
+public class StarPlatinum extends Stand {
+
+    private final String summonStandTag = "Star Platinum";
+
+    public StarPlatinum(Plugin plugin) {
+        super(plugin);
+    }
+
     @Override
     public void initialize() {
 

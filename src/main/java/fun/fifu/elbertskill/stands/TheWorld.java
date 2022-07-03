@@ -6,7 +6,6 @@ import fun.fifu.elbertskill.NekoUtil;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.PigZombie;
 import org.bukkit.entity.Player;
@@ -23,9 +22,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 //    一、世界[The World]
 //    右键物品形式的替身召唤对应替身生物，再次收回（僵尸猪灵）
@@ -44,20 +41,12 @@ import java.util.Map;
 //    给玩家一个拿在主手加18攻击伤害，20攻击速度的物品（最好是棍子这类不能摆放的）
 //    20秒后移除
 //    冷却5秒
-public class TheWorld implements Stand {
-    Plugin plugin;
+public class TheWorld extends Stand {
+    private final String summonStandTag = "The World";
 
     public TheWorld(Plugin plugin) {
-        this.plugin = plugin;
+        super(plugin);
     }
-
-    // 玩家 -> 玩家的替身
-    public Map<Player, LivingEntity> spawnMap = new HashMap<>();
-
-    // 删除AI的实体
-    List<LivingEntity> aiList = new ArrayList<>();
-
-    private final String summonStandTag = "召唤替身（猪人）";
 
     @Override
     public void initialize() {
@@ -173,83 +162,6 @@ public class TheWorld implements Stand {
                 player.sendMessage("已收回 " + mudaTag);
             }
         }.runTaskLater(plugin, 20 * 20);
-    }
-
-    /**
-     * 技能：时停
-     *
-     * @param player 召唤技能的玩家
-     */
-    private void timeStop(Player player) {
-        // 移除全体实体AI (半径100)
-        player.getWorld().getEntities().forEach(entity -> {
-            if (entity.equals(player))
-                return;
-            if (!(entity instanceof LivingEntity livingEntity))
-                return;
-            if (entity.getLocation().distance(player.getLocation()) > 100)
-                return;
-            livingEntity.setAI(false);
-
-            livingEntity.addPotionEffect(PotionEffectType.BLINDNESS.createEffect(20 * 8, 8));
-            livingEntity.addPotionEffect(PotionEffectType.SLOW.createEffect(20 * 8, 8));
-            livingEntity.addPotionEffect(PotionEffectType.WEAKNESS.createEffect(20 * 8, 8));
-            aiList.add(livingEntity);
-
-            player.sendMessage("已删除AI");
-        });
-
-        // 放回AI
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                aiList.forEach(livingEntity -> livingEntity.setAI(true));
-                player.sendMessage("已放回AI");
-            }
-        }.runTaskLater(plugin, 180);
-    }
-
-
-    /**
-     * 让玩家召唤一个替身
-     *
-     * @param player 要召唤替身的玩家
-     * @param clazz  替身实体种类
-     */
-    private <T extends LivingEntity> void summonStand(Player player, Class<T> clazz) {
-        var location = player.getLocation();
-        var vector = location.getDirection().multiply(-1);
-        vector.setY(1);
-        location.add(vector);
-        var Stand = location.getWorld().spawn(location, clazz);
-        Stand.setAI(false);
-        spawnMap.put(player, Stand);
-        player.sendMessage("已召唤替身");
-    }
-
-    /**
-     * 收回替身
-     *
-     * @param player 要收回替身的玩家
-     */
-    private void removeStand(Player player) {
-        spawnMap.get(player).remove();
-        spawnMap.remove(player);
-        player.sendMessage("已收回替身");
-    }
-
-    /**
-     * 用替身查找召唤者
-     *
-     * @param stand 替身
-     * @return 替身的召唤者
-     */
-    private Player getPlayerFromStand(LivingEntity stand) {
-        for (Player player : spawnMap.keySet()) {
-            if (spawnMap.get(player).equals(stand))
-                return player;
-        }
-        return null;
     }
 
 }
