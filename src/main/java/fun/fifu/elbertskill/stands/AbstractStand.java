@@ -23,10 +23,10 @@ import java.util.Map;
 /**
  * 替身：玩家会随机抽取一个替身，然后获得对应替身的技能
  */
-public abstract class Stand {
+public abstract class AbstractStand {
     Plugin plugin;
 
-    public Stand(Plugin plugin) {
+    public AbstractStand(Plugin plugin) {
         this.plugin = plugin;
     }
 
