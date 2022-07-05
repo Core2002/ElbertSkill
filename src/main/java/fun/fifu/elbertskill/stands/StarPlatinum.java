@@ -1,16 +1,9 @@
 package fun.fifu.elbertskill.stands;
 
 import fun.fifu.elbertskill.ElbertSkill;
-import fun.fifu.elbertskill.NekoUtil;
-import org.bukkit.Material;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.entity.PigZombie;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.scheduler.BukkitRunnable;
 
 //    二、白金之星[Star Platinum]（小白，记得带个钻石帽子）
 //    右键物品形式的替身召唤对应替身生物，再次收回
@@ -55,37 +48,10 @@ public class StarPlatinum extends AbstractStand {
             timeStop(player, 100);
 
             // 二技能  欧拉欧拉
-            oulaOula(player);
+            oulaOula(player, 20, 20);
         } else {
             removeStand(player);
         }
     }
 
-    String oulaTag = "欧拉欧拉";
-
-    /**
-     * 技能：欧拉欧拉
-     * @param player    召唤技能的玩家
-     */
-    void oulaOula(Player player) {
-        // 发放欧拉
-        ItemStack itemStack = new ItemStack(Material.STICK);
-        NekoUtil.makeTagItem(itemStack, oulaTag);
-        ItemMeta itemMeta = itemStack.getItemMeta();
-        itemMeta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE,
-                new AttributeModifier("value", 20, AttributeModifier.Operation.ADD_NUMBER));
-        itemMeta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED,
-                new AttributeModifier("value", 20, AttributeModifier.Operation.ADD_NUMBER));
-        itemStack.setItemMeta(itemMeta);
-        player.getInventory().addItem(itemStack);
-
-        // 收回木大
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                NekoUtil.spendTagItem(player.getInventory(), oulaTag);
-                player.sendMessage("已收回 " + oulaTag);
-            }
-        }.runTaskLater(plugin, 20 * 20);
-    }
 }

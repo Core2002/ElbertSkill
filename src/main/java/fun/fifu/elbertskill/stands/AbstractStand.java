@@ -2,6 +2,9 @@ package fun.fifu.elbertskill.stands;
 
 import com.alkaidmc.alkaid.bukkit.event.AlkaidEvent;
 import fun.fifu.elbertskill.NekoUtil;
+import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventPriority;
@@ -11,6 +14,7 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -163,10 +167,10 @@ public abstract class AbstractStand {
     /**
      * 技能：时停
      *
-     * @param player    召唤技能的玩家
-     * @param tick      多少tick过后归还AI
+     * @param player 召唤技能的玩家
+     * @param tick   多少tick过后归还AI
      */
-    public void timeStop(Player player,Integer tick) {
+    public void timeStop(Player player, Integer tick) {
         // 移除全体实体AI (半径100)
         player.getWorld().getEntities().forEach(entity -> {
             if (entity.equals(player))
@@ -193,5 +197,34 @@ public abstract class AbstractStand {
                 player.sendMessage("已放回AI");
             }
         }.runTaskLater(plugin, tick);
+    }
+
+    String oulaTag = "欧拉欧拉";
+
+    /**
+     * 技能：欧拉欧拉
+     *
+     * @param player 召唤技能的玩家
+     */
+    void oulaOula(Player player, double attackDamage, double attackSpeed) {
+        // 发放欧拉
+        ItemStack itemStack = new ItemStack(Material.STICK);
+        NekoUtil.makeTagItem(itemStack, oulaTag);
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        itemMeta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE,
+                new AttributeModifier("value", attackDamage, AttributeModifier.Operation.ADD_NUMBER));
+        itemMeta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED,
+                new AttributeModifier("value", attackSpeed, AttributeModifier.Operation.ADD_NUMBER));
+        itemStack.setItemMeta(itemMeta);
+        player.getInventory().addItem(itemStack);
+
+        // 收回木大
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                NekoUtil.spendTagItem(player.getInventory(), oulaTag);
+                player.sendMessage("已收回 " + oulaTag);
+            }
+        }.runTaskLater(plugin, 20 * 20);
     }
 }

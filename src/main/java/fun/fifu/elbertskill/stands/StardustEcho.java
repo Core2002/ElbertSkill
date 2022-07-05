@@ -23,6 +23,11 @@ import java.util.Arrays;
 //    玩家本体为中心，破坏3X3X3范围内所有方块
 //
 //    四技能 时停
+//
+//    五技能 欧拉拉拉
+//    给玩家一个拿在主手加15攻击伤害，20攻击速度的物品（最好是棍子这类不能摆放的）
+//    20秒后移除
+//    冷却5秒
 public class StardustEcho extends AbstractStand {
     public StardustEcho(Plugin plugin) {
         super(plugin);
@@ -50,6 +55,8 @@ public class StardustEcho extends AbstractStand {
             vectorCollapse(player);
             // 四技能  时停
             timeStop(player, 100);
+            // 五技能 欧拉拉拉
+            oulaOula(player, 15, 20);
         } else {
             removeStand(player);
         }
