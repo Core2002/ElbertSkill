@@ -30,7 +30,7 @@ public class StardustEcho extends AbstractStand {
 
     @Override
     public void initialize() {
-        summonStandTag = "Stardust Echo";
+        summonStandTag = "Stardust_Echo";
         // 处理技能物品
         ElbertSkill.skillItemTag.add(summonStandTag);
 //        ElbertSkill.skillItemTag.add(oulaTag);

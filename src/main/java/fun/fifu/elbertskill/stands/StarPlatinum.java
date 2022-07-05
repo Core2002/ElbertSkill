@@ -38,7 +38,7 @@ public class StarPlatinum extends AbstractStand {
 
     @Override
     public void initialize() {
-        summonStandTag = "Star Platinum";
+        summonStandTag = "Star_Platinum";
         // 处理技能物品
         ElbertSkill.skillItemTag.add(summonStandTag);
         ElbertSkill.skillItemTag.add(oulaTag);

@@ -36,7 +36,7 @@ public class TheWorld extends AbstractStand {
 
     @Override
     public void initialize() {
-        summonStandTag = "The World";
+        summonStandTag = "The_World";
         // 处理技能物品
         ElbertSkill.skillItemTag.add(summonStandTag);
         ElbertSkill.skillItemTag.add(mudaTag);
