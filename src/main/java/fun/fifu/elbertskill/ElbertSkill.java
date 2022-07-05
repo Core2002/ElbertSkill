@@ -3,6 +3,7 @@ package fun.fifu.elbertskill;
 import java.util.*;
 
 import com.alkaidmc.alkaid.bukkit.event.AlkaidEvent;
+import fun.fifu.elbertskill.stands.GoldExperience;
 import fun.fifu.elbertskill.stands.StarPlatinum;
 import fun.fifu.elbertskill.stands.StardustEcho;
 import org.bukkit.entity.Player;
@@ -47,6 +48,7 @@ public class ElbertSkill extends JavaPlugin implements Listener {
         new TheWorld(this).initialize();
         new StarPlatinum(this).initialize();
         new StardustEcho(this).initialize();
+        new GoldExperience(this).initialize();
     }
 
     public static Set<String> skillItemTag = new HashSet<>();
