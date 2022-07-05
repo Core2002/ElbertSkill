@@ -4,6 +4,9 @@ import fun.fifu.elbertskill.ElbertSkill;
 import org.bukkit.entity.PigZombie;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.potion.PotionEffectType;
+
+import java.util.Arrays;
 
 //    三、星尘回音[Stardust Echo]（小僵尸，记得带个钻石帽子）
 //    右键物品形式的替身召唤对应替身生物，再次收回
@@ -58,7 +61,7 @@ public class StardustEcho extends AbstractStand {
      * @param player 召唤技能的玩家
      */
     void vectorJet(Player player) {
-        // TODO 矢量喷射
+        player.addPotionEffect(PotionEffectType.LEVITATION.createEffect(20 * 2, 127));
     }
 
     /**
@@ -67,8 +70,12 @@ public class StardustEcho extends AbstractStand {
      * @param player 召唤技能的玩家
      */
     void vectorReinforcement(Player player) {
-        // TODO 矢量强化
+        player.addPotionEffect(PotionEffectType.SPEED.createEffect(20 * 3, 5));
+        player.addPotionEffect(PotionEffectType.INCREASE_DAMAGE.createEffect(20 * 3, 5));
+        player.addPotionEffect(PotionEffectType.JUMP.createEffect(20 * 3, 5));
     }
+
+    int[] a = {-1, 0, 1};
 
     /**
      * 技能: 矢量崩坏
@@ -76,6 +83,12 @@ public class StardustEcho extends AbstractStand {
      * @param player 召唤技能的玩家
      */
     void vectorCollapse(Player player) {
-        // TODO 矢量崩坏
+        Arrays.stream(a).forEach(x -> {
+            Arrays.stream(a).forEach(y -> {
+                Arrays.stream(a).forEach(z -> {
+                    player.breakBlock(player.getLocation().getBlock().getRelative(x, y, z));
+                });
+            });
+        });
     }
 }
