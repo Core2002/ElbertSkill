@@ -3,6 +3,7 @@ package fun.fifu.elbertskill.stands;
 import fun.fifu.elbertskill.ElbertSkill;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.java.JavaPlugin;
 
 //    四、黄金体验[Gold Experience]（小僵尸猪灵）
 //    右键物品形式的替身召唤对应替身生物，再次收回
@@ -22,7 +23,7 @@ import org.bukkit.plugin.Plugin;
 //    在半径十五格内的玩家身边生成一只敌对生物（最好是从姜丝，凋零骷髅，僵尸猪人，和卫道士这样的近战里随机抽取）
 //    冷却10秒
 public class GoldExperience  extends AbstractStand {
-    public GoldExperience(Plugin plugin) {
+    public GoldExperience(JavaPlugin plugin) {
         super(plugin);
     }
 

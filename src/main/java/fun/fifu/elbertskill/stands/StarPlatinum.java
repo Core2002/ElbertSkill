@@ -4,6 +4,7 @@ import fun.fifu.elbertskill.ElbertSkill;
 import org.bukkit.entity.PigZombie;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.java.JavaPlugin;
 
 //    二、白金之星[Star Platinum]（小白，记得带个钻石帽子）
 //    右键物品形式的替身召唤对应替身生物，再次收回
@@ -25,7 +26,7 @@ import org.bukkit.plugin.Plugin;
 //    冷却5秒
 public class StarPlatinum extends AbstractStand {
 
-    public StarPlatinum(Plugin plugin) {
+    public StarPlatinum(JavaPlugin plugin) {
         super(plugin);
     }
 

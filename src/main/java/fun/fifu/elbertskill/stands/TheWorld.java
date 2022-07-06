@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 //    一、世界[The World]
@@ -30,7 +31,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 //    20秒后移除
 //    冷却5秒
 public class TheWorld extends AbstractStand {
-    public TheWorld(Plugin plugin) {
+    public TheWorld(JavaPlugin plugin) {
         super(plugin);
     }
 

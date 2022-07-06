@@ -2,8 +2,8 @@ package fun.fifu.elbertskill;
 
 public class Test {
     @org.junit.jupiter.api.Test
-    public void reflection(){
-        ClassUtils.getClassName ("fun.fifu.elbertskill.stands",true).forEach(p-> {
+    public void reflection() {
+        ClassUtils.instance.getClasses("fun.fifu.elbertskill.stands").forEach(p -> {
 
             System.out.println(p);
         });

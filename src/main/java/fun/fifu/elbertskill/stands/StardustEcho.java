@@ -4,6 +4,7 @@ import fun.fifu.elbertskill.ElbertSkill;
 import org.bukkit.entity.PigZombie;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.Arrays;
@@ -29,7 +30,7 @@ import java.util.Arrays;
 //    20秒后移除
 //    冷却5秒
 public class StardustEcho extends AbstractStand {
-    public StardustEcho(Plugin plugin) {
+    public StardustEcho(JavaPlugin plugin) {
         super(plugin);
     }
 

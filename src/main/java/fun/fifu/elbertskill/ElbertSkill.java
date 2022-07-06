@@ -1,22 +1,21 @@
 package fun.fifu.elbertskill;
 
-import java.util.*;
-
 import com.alkaidmc.alkaid.bukkit.event.AlkaidEvent;
-import fun.fifu.elbertskill.stands.GoldExperience;
-import fun.fifu.elbertskill.stands.StarPlatinum;
-import fun.fifu.elbertskill.stands.StardustEcho;
+import fun.fifu.elbertskill.stands.AbstractStand;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import fun.fifu.elbertskill.stands.TheWorld;
+import java.lang.reflect.Modifier;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class ElbertSkill extends JavaPlugin implements Listener {
     public static final Map<Player, Player> damageMap = new HashMap<>();
@@ -45,10 +44,19 @@ public class ElbertSkill extends JavaPlugin implements Listener {
         antiBug();
 
         // 初始化替身
-        new TheWorld(this).initialize();
-        new StarPlatinum(this).initialize();
-        new StardustEcho(this).initialize();
-        new GoldExperience(this).initialize();
+        ClassUtils.instance.getClasses("fun.fifu.elbertskill.stands").forEach(c -> {
+            try {
+                if (c.getConstructor(JavaPlugin.class).newInstance(this) instanceof AbstractStand stand) {
+                    if (Modifier.isAbstract(stand.getClass().getModifiers())) {
+                        return;
+                    }
+                    stand.initialize();
+                }
+            } catch (Exception ignored) {
+            }
+        });
+
+        getLogger().info("插件已启动");
     }
 
     public static Set<String> skillItemTag = new HashSet<>();

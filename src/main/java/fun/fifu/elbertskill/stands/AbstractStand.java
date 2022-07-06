@@ -15,7 +15,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -28,9 +28,9 @@ import java.util.Map;
  * 替身：玩家会随机抽取一个替身，然后获得对应替身的技能
  */
 public abstract class AbstractStand {
-    Plugin plugin;
+    JavaPlugin plugin;
 
-    public AbstractStand(Plugin plugin) {
+    public AbstractStand(JavaPlugin plugin) {
         this.plugin = plugin;
     }
 
@@ -103,9 +103,10 @@ public abstract class AbstractStand {
                 .priority(EventPriority.HIGHEST)
                 .ignore(false)
                 .register();
+
+        plugin.getLogger().info("替身 " + summonStandTag + " 初始化完毕");
     }
 
-    ;
 
     /**
      * 替身被召唤时调用
