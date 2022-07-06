@@ -3,7 +3,6 @@ package fun.fifu.elbertskill.stands;
 import fun.fifu.elbertskill.ElbertSkill;
 import org.bukkit.entity.PigZombie;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 //    二、白金之星[Star Platinum]（小白，记得带个钻石帽子）

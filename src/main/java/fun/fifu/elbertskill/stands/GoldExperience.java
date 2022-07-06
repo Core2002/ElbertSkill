@@ -2,7 +2,6 @@ package fun.fifu.elbertskill.stands;
 
 import fun.fifu.elbertskill.ElbertSkill;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 //    四、黄金体验[Gold Experience]（小僵尸猪灵）
