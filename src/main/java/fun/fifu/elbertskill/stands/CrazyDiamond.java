@@ -44,6 +44,7 @@ public class CrazyDiamond extends AbstractStand {
             // 二技能 修复
             fix(player);
 
+            // TODO 虫箭
         } else {
             removeStand(player);
         }
