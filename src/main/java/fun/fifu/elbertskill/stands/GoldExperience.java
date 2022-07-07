@@ -38,7 +38,6 @@ public class GoldExperience extends AbstractStand {
         summonStandTag = "Gold_Experience";
         // 处理技能物品
         ElbertSkill.skillItemTag.add(summonStandTag);
-//        ElbertSkill.skillItemTag.add(oulaTag);
         super.initialize();
     }
 
@@ -48,7 +47,7 @@ public class GoldExperience extends AbstractStand {
         if (spawnMap.get(player) == null) {
             summonStand(player, PigZombie.class);
             // 一技能 木大木大
-            oulaOula(player, 5, 20);
+            lala(player, 5, 20);
             // 二技能 生命能量
             lifeEnergy(player);
             // 三技能 制造生命
@@ -64,8 +63,12 @@ public class GoldExperience extends AbstractStand {
      * @param player 召唤技能的玩家
      */
     void lifeEnergy(Player player) {
-        player.addPotionEffect(PotionEffectType.WEAKNESS.createEffect(20 * 3, 3));
-        player.addPotionEffect(PotionEffectType.HEAL.createEffect(20 * 3, 3));
+        player.getWorld().getNearbyEntities(player.getLocation(), 3, 3, 3).forEach(entity -> {
+            if (!(entity instanceof LivingEntity livingEntity))
+                return;
+            livingEntity.addPotionEffect(PotionEffectType.WEAKNESS.createEffect(20 * 3, 3));
+            livingEntity.addPotionEffect(PotionEffectType.HEAL.createEffect(20 * 3, 3));
+        });
     }
 
     Class[] lifes = {Zombie.class, WitherSkeleton.class, PigZombie.class, Vindicator.class};

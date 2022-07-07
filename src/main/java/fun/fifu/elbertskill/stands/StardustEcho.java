@@ -56,7 +56,7 @@ public class StardustEcho extends AbstractStand {
             // 四技能  时停
             timeStop(player, 100);
             // 五技能 欧拉拉拉
-            oulaOula(player, 15, 20);
+            lala(player, 15, 20);
         } else {
             removeStand(player);
         }

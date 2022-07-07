@@ -48,7 +48,7 @@ public class StarPlatinum extends AbstractStand {
             timeStop(player, 100);
 
             // 二技能  欧拉欧拉
-            oulaOula(player, 20, 20);
+            lala(player, 20, 20);
         } else {
             removeStand(player);
         }

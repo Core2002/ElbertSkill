@@ -207,7 +207,7 @@ public abstract class AbstractStand {
      *
      * @param player 召唤技能的玩家
      */
-    void oulaOula(Player player, double attackDamage, double attackSpeed) {
+    void lala(Player player, double attackDamage, double attackSpeed) {
         // 发放欧拉
         ItemStack itemStack = new ItemStack(Material.STICK);
         NekoUtil.makeTagItem(itemStack, oulaTag);
