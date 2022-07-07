@@ -1,8 +1,15 @@
 package fun.fifu.elbertskill.stands;
 
 import fun.fifu.elbertskill.ElbertSkill;
-import org.bukkit.entity.Player;
+import fun.fifu.elbertskill.NekoUtil;
+import org.bukkit.entity.*;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 
 //    四、黄金体验[Gold Experience]（小僵尸猪灵）
 //    右键物品形式的替身召唤对应替身生物，再次收回
@@ -21,7 +28,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 //    三技能 制造生命
 //    在半径十五格内的玩家身边生成一只敌对生物（最好是从姜丝，凋零骷髅，僵尸猪人，和卫道士这样的近战里随机抽取）
 //    冷却10秒
-public class GoldExperience  extends AbstractStand {
+public class GoldExperience extends AbstractStand {
     public GoldExperience(JavaPlugin plugin) {
         super(plugin);
     }
@@ -37,6 +44,65 @@ public class GoldExperience  extends AbstractStand {
 
     @Override
     void summon(Player player) {
+        // 处理替身
+        if (spawnMap.get(player) == null) {
+            summonStand(player, PigZombie.class);
+            // 一技能 木大木大
+            oulaOula(player, 5, 20);
+            // 二技能 生命能量
+            lifeEnergy(player);
+            // 三技能 制造生命
+            makeLife(player);
+        } else {
+            removeStand(player);
+        }
+    }
 
+    /**
+     * 技能: 生命能量
+     *
+     * @param player 召唤技能的玩家
+     */
+    void lifeEnergy(Player player) {
+        player.addPotionEffect(PotionEffectType.WEAKNESS.createEffect(20 * 3, 3));
+        player.addPotionEffect(PotionEffectType.HEAL.createEffect(20 * 3, 3));
+    }
+
+    Class[] lifes = {Zombie.class, WitherSkeleton.class, PigZombie.class, Vindicator.class};
+
+    Random random = new Random();
+
+    /**
+     * 技能: 制造生命
+     *
+     * @param player
+     */
+    void makeLife(Player player) {
+        var location = player.getLocation();
+        var vector = location.getDirection().multiply(-1);
+        vector.setY(1);
+        location.add(vector);
+        var life = (LivingEntity) location.getWorld().spawn(location, lifes[random.nextInt(lifes.length)]);
+        lifeMap.put(player, life);
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                NekoUtil.spendTagItem(player.getInventory(), oulaTag);
+            }
+        }.runTaskLater(plugin, 20 * 10);
+    }
+
+    // 玩家 -> 召唤物
+    public Map<Player, LivingEntity> lifeMap = new HashMap<>();
+
+
+    /**
+     * 收回替身
+     *
+     * @param player 要收回替身的玩家
+     */
+    public void removeLife(Player player) {
+        lifeMap.get(player).remove();
+        lifeMap.remove(player);
     }
 }
