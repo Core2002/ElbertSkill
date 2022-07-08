@@ -45,7 +45,7 @@ public class GoldExperience extends AbstractStand {
     void summon(Player player) {
         // 处理替身
         if (spawnMap.get(player) == null) {
-            summonStand(player, PigZombie.class);
+            summonStand(player, Sheep.class);
             // 一技能 木大木大
             lala(player, 5, 20);
             // 二技能 生命能量
@@ -71,7 +71,7 @@ public class GoldExperience extends AbstractStand {
         });
     }
 
-    Class[] lifes = {Zombie.class, WitherSkeleton.class, PigZombie.class, Vindicator.class};
+    Class[] lifes = {Pig.class, Wolf.class, Creeper.class, Spider.class};
 
     Random random = new Random();
 
