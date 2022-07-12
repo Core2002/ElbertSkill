@@ -32,7 +32,7 @@ public class ElbertSkill extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(this, this);
 
         // 伪命令：写物品标签
-        NekoUtil.makePlayerConmmand("fun.fifu.elberskill.writeTag", "#el-writeTag", res -> {
+        NekoUtil.makePlayerCommand("fun.fifu.elberskill.writeTag", "#el-writeTag", res -> {
             ItemStack itemInMainHand = res.player().getInventory().getItemInMainHand();
             if (itemInMainHand.getType().isAir())
                 return;

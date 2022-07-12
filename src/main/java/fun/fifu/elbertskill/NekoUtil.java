@@ -147,7 +147,7 @@ public class NekoUtil {
      * @param command    命令内容
      * @param exec       触发后执行的代码
      */
-    public static void makePlayerConmmand(String permission, String command, Consumer<Res> exec) {
+    public static void makePlayerCommand(String permission, String command, Consumer<Res> exec) {
         new AlkaidEvent(ElbertSkill.slbertSkill).simple()
                 .event(AsyncPlayerChatEvent.class)
                 .listener(event -> {
