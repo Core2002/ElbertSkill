@@ -26,6 +26,9 @@ import org.bukkit.potion.PotionEffectType;
 //    检测允许发生此事件的替身对应的替身使者使用虫箭
 //    将玩家从当前替身组删除
 //    将玩家加入对应镇魂曲替身组
+
+//    替身之箭：右键之后50%概率随机获得替身，或者杀死玩家，
+//    随机给的替身不包括 镇魂曲 盒需要进化的替身（比如 天堂之眼）
 public class CrazyDiamond extends AbstractStand {
 
     public CrazyDiamond(JavaPlugin plugin) {
