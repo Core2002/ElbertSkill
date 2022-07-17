@@ -46,13 +46,12 @@ public class ElbertSkill extends JavaPlugin implements Listener {
         // 初始化替身
         ClassUtils.instance.getClasses("fun.fifu.elbertskill.stands").forEach(c -> {
             try {
-                if (c.getConstructor(JavaPlugin.class).newInstance(this) instanceof AbstractStand stand) {
-                    if (Modifier.isAbstract(stand.getClass().getModifiers())) {
-                        return;
-                    }
+                if (Modifier.isAbstract(c.getModifiers()) || c.isAnonymousClass())
+                    return;
+                if (c.getConstructor(JavaPlugin.class).newInstance(this) instanceof AbstractStand stand)
                     stand.initialize();
-                }
-            } catch (Exception ignored) {
+            } catch (Exception exception) {
+                exception.printStackTrace();
             }
         });
 

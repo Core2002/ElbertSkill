@@ -1,5 +1,6 @@
 package fun.fifu.elbertskill.stands;
 
+import fun.fifu.elbertskill.ElbertSkill;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Zombie;
@@ -33,6 +34,14 @@ public class CrazyDiamond extends AbstractStand {
 
     public CrazyDiamond(JavaPlugin plugin) {
         super(plugin);
+    }
+
+    @Override
+    public void initialize() {
+        summonStandTag = "Crazy_Diamond";
+        // 处理技能物品
+        ElbertSkill.skillItemTag.add(summonStandTag);
+        super.initialize();
     }
 
     @Override
