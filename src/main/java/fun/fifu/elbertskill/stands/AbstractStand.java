@@ -144,6 +144,7 @@ public abstract class AbstractStand {
     public void removeStand(Player player) {
         spawnMap.get(player).remove();
         spawnMap.remove(player);
+        NekoUtil.spendTagItem(player.getInventory(), summonStandTag);
         player.sendMessage("已收回替身");
     }
 
